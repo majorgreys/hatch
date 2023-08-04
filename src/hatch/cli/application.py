@@ -74,6 +74,10 @@ class Application(Terminal):
             with self.status_waiting(f'Creating environment: {environment.name}'):
                 environment.create()
 
+            if environment.post_create_commands:
+                with self.status_waiting('Running post-create commands'):
+                    self.run_shell_commands(environment, environment.post_create_commands, source='post-create')
+
             if not environment.skip_install:
                 if environment.pre_install_commands:
                     with self.status_waiting('Running pre-installation commands'):

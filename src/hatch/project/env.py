@@ -14,6 +14,7 @@ RESERVED_OPTIONS = {
     'platforms': list,
     'post-install-commands': list,
     'pre-install-commands': list,
+    'post-sync-dependencies': list,
     'python': str,
     'scripts': dict,
     'skip-install': bool,

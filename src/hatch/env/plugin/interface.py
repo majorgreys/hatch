@@ -85,6 +85,7 @@ class EnvironmentInterface(ABC):
         self._scripts = None
         self._pre_install_commands = None
         self._post_install_commands = None
+        self._post_create_commands = None
 
     @property
     def matrix_variables(self):
@@ -614,6 +615,25 @@ class EnvironmentInterface(ABC):
             self._post_install_commands = list(post_install_commands)
 
         return self._post_install_commands
+
+    @property
+    def post_create_commands(self):
+        if self._post_create_commands is None:
+            post_create_commands = self.config.get('post-create-commands', [])
+            if not isinstance(post_create_commands, list):
+                message = f'Field `tool.hatch.envs.{self.name}.post-create-commands` must be an array'
+                raise TypeError(message)
+
+            for i, command in enumerate(post_create_commands, 1):
+                if not isinstance(command, str):
+                    message = (
+                        f'Commands #{i} of field `tool.hatch.envs.{self.name}.post-create-commands` must be a string'
+                    )
+                    raise TypeError(message)
+
+            self._post_create_commands = list(post_create_commands)
+
+        return self._post_create_commands
 
     def activate(self):
         """
